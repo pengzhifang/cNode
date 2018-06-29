@@ -1,4 +1,4 @@
-const db = require('./db_helper');
+const userModel = require('../models/user');
 const md5 = require('md5');
 
 exports.showSignin = (req, res) => {
@@ -43,52 +43,41 @@ exports.showSignup = (req, res) => {
 }
 exports.handleSignup = (req, res) => {
    //验证邮箱是否存在
-   db.query('select * from `users` where email=?',
-            req.body.email,
-            (err, results) => {
-               if (err) {
-                  return res.send('服务器内部错误');
-               }
-               if (results.length > 0) {
-                  res.render('signup.html', {
-                     msg: '邮箱已存在'
-                  })
-                  return;
-               }
-
-               //验证昵称是否存在
-               db.query('select * from `users` where nickname=?',
-                        req.body.nickname,
-                        (err, results) => {
-                           if (err) {
-                              return res.send('服务器内部错误');
-                           }
-                           if (results.length > 0) {
-                              res.render('signup.html', {
-                                 msg: '昵称已存在'
-                              })
-                           }
-
-                           req.body.createdAt = new Date();
-                           db.query('insert into `users` set ?', 
-                                    req.body,
-                                    (err, results) => {
-                                       if (err) {
-                                          console.log(err);
-                                          return res.send('服务器内部错误');
-                                       }
-                                       // console.log(results);
-                                       if (results.affectedRows === 1) {
-                                          res.redirect('/signin');
-                                          
-                                       } else {
-                                          res.render('signup.html', {
-                                             msg: "注册失败"
-                                          })
-                                       }
-                                    });
-                        })
+   // console.log(req.body);
+   userModel.getByEmail(req.body.email, (err, user) => {
+      if (err) {
+         return res.send('服务器内部错误');
+      }
+      if (user) {
+         return res.render('signup.html', {
+            msg: '邮箱已存在'
+         });
+      }
+      userModel.getByNickname(req.body.nickname, (err, user) => {
+         if (err) {
+            return res.send('服务器内部错误');
+         }
+         if (user) {
+            return res.render('signup.html', {
+               msg: '昵称已存在'
             })
+         }
+         req.body.createdAt = new Date();
+         req.body.password = md5(req.body.password);
+         userModel.create(req.body, (err, isOK) => {
+            if (err) {
+               return res.send('服务器内部错误');
+            }
+            if (isOK) {
+               res.redirect('/signin');
+            } else {
+               res.render('signup.html', {
+                  msg: '注册失败'
+               });
+            }
+         })
+      })
+   })
             
    
 }
