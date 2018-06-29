@@ -4,7 +4,7 @@ const router = require('./routes/router');
 const bodyParser = require('body-parser');
 const session = require('express-session');
 const MySQLStore = require('express-mysql-session')(session);
-
+const config = require('./config');
 
 const app = new express();
 
@@ -18,12 +18,13 @@ app.engine('html', art);
 app.use('/public', express.static('./public'));
 app.use('/node_modules', express.static('./node_modules'));
 
+var db = config.database;
 var options = {
-	host: 'localhost',
-	port: 3306,
-	user: 'root',
-	password: 'root',
-	database: 'ithub'
+	host: db.localhost,
+	port: db.port,
+	user: db.user,
+	password: db.password,
+	database: db.database
 };
 
 var sessionStore = new MySQLStore(options);
@@ -36,9 +37,8 @@ app.use(session({
    saveUninitialized: true  //默认即使不写session也会生成sessionid;
 }))
 
-const PORT = 3000;
-app.listen(PORT, () => {
-   console.log('监听3000端口');
+app.listen(config.port, () => {
+   console.log('监听' + config.port);
 })
 
 app.use(router);
