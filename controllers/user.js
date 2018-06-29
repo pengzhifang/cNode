@@ -26,7 +26,7 @@ exports.handleSignin = (req, res) => {
          //设置session
          delete user.password;
          req.session.user = user;
-         
+
          res.json({
             code: 200,
             message: '登录成功'
@@ -85,8 +85,11 @@ exports.handleSignup = (req, res) => {
             
    
 }
+
+//实现退出功能
 exports.handleSignout = (req, res) => {
-   res.send();
+   req.session.destroy();
+   res.redirect('/signin');
 }
 
  
