@@ -22,10 +22,16 @@ exports.handleSignin = (req, res) => {
       //验证密码是否正确
       const password = md5(req.body.password);
       if (password === user.password) {
+
+         //设置session
+         delete user.password;
+         req.session.user = user;
+         
          res.json({
             code: 200,
             message: '登录成功'
          })
+         
       } else {
          return res.json({
             code: 402,
