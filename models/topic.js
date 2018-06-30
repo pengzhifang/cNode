@@ -21,7 +21,7 @@ exports.createTopic = (topic, callback) => {
 //根据id查询话题
 exports.getById = (id, callback) => {
    db.query(
-      'selsect * from `topics` where `id` = ?',
+      'select * from `topics` where `id` = ?',
       id,
       (err, results) => {
          if (err) {

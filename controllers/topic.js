@@ -44,11 +44,29 @@ exports.handleCreate = (req, res) => {
    })
 }
 exports.showTopic = (req, res) => {
-   res.send('showTopic');
+   console.log(req.query);
+   topicModel.getById(req.query.id, (err, topic) => {
+      if (err) {
+         return res.send('服务器内部错误');
+      }
+      res.render('topic/show.html',{
+         topic,
+         user: req.session.user
+      });
+   })
+   
 }
+
+//显示编辑话题页面
 exports.showEdit = (req, res) => {
-   res.send('showEdit');
+   res.render('topic/edit.html');
 }
+//处理编辑请求
 exports.handleEdit = (req, res) => {
    res.send('handleEdit');
+}
+
+//删除话题
+exports.handleDelete = (req, res) => {
+   res.send('handleDelete');
 }
