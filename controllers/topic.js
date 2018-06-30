@@ -3,11 +3,12 @@ const topicModel = require('../models/topic');
 
 exports.showCreate = (req, res) => {
    categoryModel.getAll((err, categories) => {
-      // if (err) {
-      //   return res.send('服务器内部错误'); 
-      // }
+      if (err) {
+        return res.send('服务器内部错误'); 
+      }
       res.render('topic/create.html', {
-         categories
+         categories,
+         user: req.session.user
       });
    })
 }
