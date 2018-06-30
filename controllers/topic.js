@@ -1,8 +1,14 @@
 const categoryModel = require('../models/category');
 
 exports.showCreate = (req, res) => {
-   
-   res.render('topic/create.html')
+   categoryModel.getAll((err, categories) => {
+      // if (err) {
+      //   return res.send('服务器内部错误'); 
+      // }
+      res.render('topic/create.html', {
+         categories
+      });
+   })
 }
 exports.handleCreate = (req, res) => {
    res.send('handleCreate');
