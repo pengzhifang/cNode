@@ -38,6 +38,18 @@
     <script src="/node_modules/bootstrap/dist/js/bootstrap.js"></script>
     <script>
         // 处理表单提交
+        $('#form').on('submit', function (e) {
+            e.preventDefault();
+            var data = $(this).serialize();
+            $.post('/topic/create', data, function (response) {
+                var {code, msg} = response;
+                if (code === 200) {
+                    location.href = '/';
+                } else {
+                    alert(msg);
+                }
+            })
+        })
     </script>
 </body>
 
