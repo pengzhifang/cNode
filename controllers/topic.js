@@ -44,8 +44,12 @@ exports.handleCreate = (req, res) => {
    })
 }
 exports.showTopic = (req, res) => {
-   console.log(req.query);
-   topicModel.getById(req.query.id, (err, topic) => {
+  //  console.log(req.params);
+   const id = req.params.topicID;
+   if (isNaN(id)) {
+     return res.send('参数错误');
+   }
+   topicModel.getById(id, (err, topic) => {
       if (err) {
          return res.send('服务器内部错误');
       }
@@ -63,10 +67,23 @@ exports.showEdit = (req, res) => {
 }
 //处理编辑请求
 exports.handleEdit = (req, res) => {
-   res.send('handleEdit');
+   res.render('topic/edit.html');
 }
 
 //删除话题
 exports.handleDelete = (req, res) => {
-   res.send('handleDelete');
+  const id = req.params.topicID;
+  if (isNaN(id)) {
+    return res.send('参数错误');
+  }
+  topicModel.deldeteById(id, (err, isOK) => {
+    if (err) {
+      return res.send('服务器内部错误');
+    }
+    if (isOK) {
+      res.redirect('/');
+    } else {
+      return res.send('删除失败');
+    }
+  })
 }

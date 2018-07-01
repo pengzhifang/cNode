@@ -75,7 +75,7 @@ exports.updata = (topic, callback) => {
 //查询所有话题
 exports.selectAll = (callback) => {
    db.query(
-      'select topics.id, nickname, title, topics.createdAt from `topics` join `users` on userId = users.id',
+      'select topics.id, nickname, title, topics.createdAt from `topics` join `users` on userId = users.id order by topics.id desc',
       (err, results) => {
          if (err) {
             return callback(err);

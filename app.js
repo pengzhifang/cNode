@@ -14,10 +14,14 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json())
 
+//配置模板
 app.engine('html', art);
+
+//配置静态资源
 app.use('/public', express.static('./public'));
 app.use('/node_modules', express.static('./node_modules'));
 
+//配置express-mysql-session
 var db = config.database;
 var options = {
 	host: db.localhost,
@@ -29,6 +33,7 @@ var options = {
 
 var sessionStore = new MySQLStore(options);
 
+//配置session
 app.use(session({
    key: 'session_id',  //修改session的名称
    secret: 'keyboard cat',  //对sessionid进行加密
@@ -41,4 +46,5 @@ app.listen(config.port, () => {
    console.log('监听' + config.port);
 })
 
+//注册路由
 app.use(router);
