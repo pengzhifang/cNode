@@ -63,11 +63,41 @@ exports.showTopic = (req, res) => {
 
 //显示编辑话题页面
 exports.showEdit = (req, res) => {
-   res.render('topic/edit.html');
+  categoryModel.getAll((err, categories) => {
+    if (err) {
+      return res.json({
+        code: 500,
+        msg: '服务器内部错误'
+      })
+    }
+    const id = req.params.topicID;
+    if (isNaN(id)) {
+      return res.json({
+        code: 401,
+        msg: '参数错误'
+      })
+    }
+    topicModel.getById(id, (err, topic) => {
+      if (err) {
+        return res.send('服务器内部错误');
+      }
+      if (topic) {
+        res.render('topic/edit.html', {
+          categories,
+          topic
+        });
+      } else {
+        return res.send('没有查到数据');
+      }
+    })
+  })
+  
 }
+
+
 //处理编辑请求
 exports.handleEdit = (req, res) => {
-   res.render('topic/edit.html');
+  
 }
 
 //删除话题
