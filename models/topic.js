@@ -55,7 +55,7 @@ exports.deldeteById = (id, callback) => {
 }
 
 //修改话题
-exports.updata = (topic, callback) => {
+exports.update = (topic, callback) => {
    db.query(
       'update `topics` set `title`=?, `content`=?, `categoryId`=? where `id`=?',
       [topic.title, topic.content, topic.categoryId, topic.id],

@@ -97,7 +97,26 @@ exports.showEdit = (req, res) => {
 
 //处理编辑请求
 exports.handleEdit = (req, res) => {
-  
+  req.body.id = req.params.topicID;
+  topicModel.update(req.body, (err, isOK) => {
+    if (err) {
+      return res.json({
+        code: 500,
+        msg: '服务器内部错误'
+      })
+    }
+    if (isOK) {
+      res.json({
+        code: 200,
+        msg: '修改成功'
+      })
+    } else {
+      res.json({
+        code: 403,
+        msg: '修改失败'
+      })
+    }
+  })
 }
 
 //删除话题
